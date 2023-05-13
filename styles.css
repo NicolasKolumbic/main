@@ -1,0 +1,117 @@
+
+
+body {
+    margin:0;
+    font-family: 'Noto Sans JP';
+}
+
+* {
+    box-sizing: border-box;
+}
+
+header {
+    background-color: black;
+    padding: 1rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+}
+
+main {
+    padding: 2rem 2rem 5rem;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: white;
+    padding: 1rem;
+    border-top: 2px solid black;
+}
+
+
+header svg {
+    width: 200px;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+.light {
+    font-weight: 300;
+}
+
+.m-0 {
+    margin:0;
+}
+
+.ml-2 {
+    margin-left: 1rem;
+}
+
+.bl-1-white {
+    border-left: 1px solid white;
+}
+
+.p-2 {
+    padding: 1rem;
+}
+
+.pl-2 {
+    padding-left: 1rem;
+}
+
+label {
+    font-weight: 700;
+    padding-right: 0.5rem;
+    line-height: 1;
+}
+
+input {
+    height: 30px;
+    border-radius: 3px;
+}
+
+.field-control {
+    display: flex;
+    align-items: center;
+    margin: 0.5rem 1rem;
+}
+
+fieldset {
+    border-width: 5px;
+    margin: 1rem;
+}
+
+fieldset legend {
+    font-weight: 700;
+    background-color: black;
+    color: white;
+}
+
+fieldset > div {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.text-end {
+    text-align: end;
+}
+
+table th {
+    font-size: 0.785rem;
+}
+
+.btn-submit {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
