@@ -1,11 +1,33 @@
-var controls = document.querySelectorAll('.text-box input');
+var controls = Array.from(document.querySelectorAll('.text-box input'));
 var title = document.querySelector('#title');
+var subscriptionForm = document.getElementById('subscriptionForm');
 
 function updateTitle() {
     title.textContent = 'Hola ' + this.value;
 }
 
-function validate() {
+function comparePassword(event) {
+    var password = controls.find(function(control) {
+        if(control.id === 'password') return control;
+    });
+
+    var repeatPassword = controls.find(function(control) {
+        if(control.id === 'repeat-password') return control;
+    });
+
+    var isInvalid = password.value !== '' && repeatPassword.value !== '' && password.value !== repeatPassword.value; 
+
+    if(isInvalid) {
+       validate.call(password, {arePasswordNotEquals: true});
+       validate.call(repeatPassword, {arePasswordNotEquals: true});
+    } 
+}
+
+function isCustom(customSetting) {
+    return Object.keys(customSetting).length > 0;
+}
+
+function validate(custom) {
     var message = '';
     if(this.validity.valueMissing) {
        message =  `El campo '${this.nextElementSibling.textContent}' es requerido.`
@@ -13,9 +35,13 @@ function validate() {
         message = `El formato del campo '${this.nextElementSibling.textContent}' es erroneo.${this.getAttribute('data-error-message')}`
     } else if(this.validity.tooShort) {
         message = `El campo '${this.nextElementSibling.textContent}' debe tener como mínimo ${this.getAttribute('minLength')} caracteres`
+    } else if(this.validity.rangeUnderflow) {
+        message = `El campo '${this.nextElementSibling.textContent}' debe ser mayor de edad`
+    } else if(custom && custom.arePasswordNotEquals) {
+        message = `Las contraseñas deben coincidir`
     }
 
-    if(!this.validity.valid) {
+    if(!this.validity.valid || (custom && isCustom(custom) && message !== '')) {
         if(!this.classList.contains('invalid')) {
             this.classList.add('invalid');
         }
@@ -25,6 +51,12 @@ function validate() {
             this.classList.remove('invalid');
         } 
     }
+
+    return {
+        field: this.nextElementSibling.textContent,
+        errorMessage: message,
+        hasError: message !== message
+    };
 }
 
 function clear() {
@@ -34,9 +66,52 @@ function clear() {
     } 
 }
 
+function send(event) {
+    event.preventDefault();
+    var result = {};
+
+    if(subscriptionForm.checkValidity()) {
+        controls.forEach(function(element) {
+            if(element.tagName === 'INPUT') {
+                result[element.id] = element.value;
+            }
+        });
+        showAlert(result);
+    } else {
+        var errors = '';
+        controls.forEach(function(element) {
+            var result = validate.call(element)
+            if(result.hasError) {
+                errors += result.field + " : " + result.errorMessage + "\n";
+            }
+        });
+
+        alert(errors);
+    }
+}
+
+function showAlert(result) {
+    var message = '';
+   for (const key in result) {
+    if (Object.hasOwnProperty.call(result, key)) {
+        message += key + " : "+ result[key] + "\n";  
+    }
+   }
+    alert(message);
+}
+
 controls.forEach(function(control) {
-    control.addEventListener('blur', validate);
-    control.addEventListener('focus', clear);
+    control.addEventListener('blur', function() {
+        validate.call(this);
+    });
+    control.addEventListener('focus', function(){
+        clear.call(this);
+    });
+    if(control.type === 'password') {
+        control.addEventListener('blur', comparePassword);
+    }
 })
 
-document.getElementById('fullName').addEventListener('input', updateTitle)
+document.getElementById('fullName').addEventListener('input', updateTitle);
+
+subscriptionForm.addEventListener('submit', send)
