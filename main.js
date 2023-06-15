@@ -15,12 +15,15 @@ function comparePassword(event) {
         if(control.id === 'repeat-password') return control;
     });
 
-    var isInvalid = password.value !== '' && repeatPassword.value !== '' && password.value !== repeatPassword.value; 
+    var isInvalid = password.value !== "" && repeatPassword.value !== "" && password.value !== repeatPassword.value; 
 
     if(isInvalid) {
        validate.call(password, {arePasswordNotEquals: true});
        validate.call(repeatPassword, {arePasswordNotEquals: true});
-    } 
+    } else {
+        clear.call(password);
+        clear.call(repeatPassword);
+    }
 }
 
 function isCustom(customSetting) {
@@ -29,27 +32,26 @@ function isCustom(customSetting) {
 
 function validate(custom) {
     var message = '';
-    if(this.validity.valueMissing) {
-       message =  `El campo '${this.nextElementSibling.textContent}' es requerido.`
-    } else if(this.validity.patternMismatch || this.validity.typeMismatch) {
-        message = `El formato del campo '${this.nextElementSibling.textContent}' es erroneo.${this.getAttribute('data-error-message')}`
-    } else if(this.validity.tooShort) {
-        message = `El campo '${this.nextElementSibling.textContent}' debe tener como mínimo ${this.getAttribute('minLength')} caracteres`
-    } else if(this.validity.rangeUnderflow) {
-        message = `El campo '${this.nextElementSibling.textContent}' debe ser mayor de edad`
-    } else if(custom && custom.arePasswordNotEquals) {
+
+    if(custom && custom.arePasswordNotEquals) {
         message = `Las contraseñas deben coincidir`
+    } else if(this.validity.valueMissing) {
+       message =  `El campo "${this.nextElementSibling.textContent}" es requerido.`
+    } else if((this.validity.patternMismatch || this.validity.typeMismatch)) {
+        message = `El formato del campo "${this.nextElementSibling.textContent}" es erroneo.${this.getAttribute('data-error-message')}`
+    } else if(this.validity.tooShort) {
+        message = `El campo "${this.nextElementSibling.textContent}" debe tener como mínimo ${this.getAttribute('minLength')} caracteres`
+    } else if(this.validity.rangeUnderflow) {
+        message = `El campo "${this.nextElementSibling.textContent}" debe ser mayor de edad`
     }
 
-    if(!this.validity.valid || (custom && isCustom(custom) && message !== '')) {
+    if(!this.validity.valid || (custom && isCustom(custom) && message !== "")) {
         if(!this.classList.contains('invalid')) {
             this.classList.add('invalid');
         }
         this.parentElement.nextElementSibling.innerText = `❌ ${message}`;
     } else {
-        if(this.classList.contains('invalid')) {
-            this.classList.remove('invalid');
-        } 
+        clear.call(this);
     }
 
     return {

@@ -1131,7 +1131,7 @@
                         </div>
                         <div class="text-box">
 							<div class="d-flex align-items-center">
-								<input type="email" id="email" data-error-message="El campo espera un formato de correo electrónico"  required/>
+								<input type="text" id="email" pattern="^[A-Za-z0-9\-\.]+@([A-Za-z0-9]+\.)+[A-Za-z]{2,4}$" data-error-message="El campo espera un formato de correo electrónico" required />
 								<label for="email">Email</label>
 							</div>
 							<p class="error-messages"></p>
