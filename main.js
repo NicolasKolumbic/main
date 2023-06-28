@@ -1,6 +1,15 @@
 var controls = Array.from(document.querySelectorAll('.text-box input'));
 var title = document.querySelector('#title');
 var subscriptionForm = document.getElementById('subscriptionForm');
+var modal = document.querySelector('.modal');
+var storage = {
+    set: function(key, value) {
+        localStorage.setItem(key, value);
+    },
+    get: function(key, value) {
+        localStorage.getItem(key);
+    }
+};
 
 function updateTitle() {
     title.textContent = 'Hola ' + this.value;
@@ -68,6 +77,16 @@ function clear() {
     } 
 }
 
+function errorHandler(err) {
+    console.error(err);
+}
+
+function responseHandler(res) {
+    modal.querySelector('.body-res').textContent = JSON.stringify(res);
+    modal.showModal();
+    console.log(res);
+}
+
 function send(event) {
     event.preventDefault();
     var result = {};
@@ -78,7 +97,8 @@ function send(event) {
                 result[element.id] = element.value;
             }
         });
-        showAlert(result);
+
+        fetch('', result).then(responseHandler).catch(errorHandler);
     } else {
         var errors = '';
         controls.forEach(function(element) {
@@ -112,7 +132,11 @@ controls.forEach(function(control) {
     if(control.type === 'password') {
         control.addEventListener('blur', comparePassword);
     }
-})
+});
+
+window.addEventListener("DOMContentLoaded", (event) => {
+    console.log("DOM fully loaded and parsed");
+});
 
 document.getElementById('fullName').addEventListener('input', updateTitle);
 
