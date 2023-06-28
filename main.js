@@ -6,7 +6,7 @@ var storage = {
     set: function(key, value) {
         localStorage.setItem(key, value);
     },
-    get: function(key, value) {
+    get: function(key) {
         localStorage.getItem(key);
     }
 };
