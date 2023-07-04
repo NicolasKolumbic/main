@@ -428,6 +428,26 @@ fieldset {
     text-align: end;
 }
 
+.modal {
+    max-width: 300px;
+    width: 30%;
+}
+
+.header-res {
+    font-weight: 600;
+}
+
+.body-res {
+    color: green;
+    font-weight: 600;
+}
+
+.body-res__data {
+    overflow: auto;
+    color: grey;
+    font-weight: 300;
+}
+
 /* S */
 @media (min-width: 577px) {
 

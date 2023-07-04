@@ -2,12 +2,13 @@ var controls = Array.from(document.querySelectorAll('.text-box input'));
 var title = document.querySelector('#title');
 var subscriptionForm = document.getElementById('subscriptionForm');
 var modal = document.querySelector('.modal');
+var closeModalButton = document.querySelector('.close-modal');
 var storage = {
     set: function(key, value) {
         localStorage.setItem(key, value);
     },
     get: function(key) {
-        localStorage.getItem(key);
+       return localStorage.getItem(key);
     }
 };
 
@@ -82,9 +83,14 @@ function errorHandler(err) {
 }
 
 function responseHandler(res) {
-    modal.querySelector('.body-res').textContent = JSON.stringify(res);
-    modal.showModal();
-    console.log(res);
+    if(res.ok) {
+        modal.querySelector('.body-res__data').textContent = storage.get('data') || res.json();
+        modal.showModal();
+    }
+}
+
+function closeModalHandler() {
+    modal.close();
 }
 
 function send(event) {
@@ -97,8 +103,11 @@ function send(event) {
                 result[element.id] = element.value;
             }
         });
+        storage.set('data', JSON.stringify(result));
 
-        fetch('', result).then(responseHandler).catch(errorHandler);
+        fetch('https://jsonplaceholder.typicode.com/posts', result)
+        .then(responseHandler)
+        .catch(errorHandler);
     } else {
         var errors = '';
         controls.forEach(function(element) {
@@ -135,9 +144,16 @@ controls.forEach(function(control) {
 });
 
 window.addEventListener("DOMContentLoaded", (event) => {
-    console.log("DOM fully loaded and parsed");
+    if(storage.get('data')) {
+        var data = JSON.parse(storage.get('data'));
+        controls.forEach(function(ctrl){
+            ctrl.value = data[ctrl.id];
+        });
+
+    }
 });
 
 document.getElementById('fullName').addEventListener('input', updateTitle);
 
 subscriptionForm.addEventListener('submit', send)
+closeModalButton.addEventListener('click', closeModalHandler)
